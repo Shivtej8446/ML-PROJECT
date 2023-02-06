@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.feature_extraction.text import CountVectorizer
+
+
+# In[2]:
+
+
+df=pd.read_csv("C:/Users/SHIVTEJ/Downloads/spama.csv",encoding="latin-1")
+
+
+# In[3]:
+
+
+df.head(n=10)
+
+
+# In[4]:
+
+
+df.shape
+
+
+# In[7]:
+
+
+np.unique(df["class"])
+
+
+# In[8]:
+
+
+np.unique(df["message"])
+
+
+# In[9]:
+
+
+x=df["message"].values
+y=df["class"].values
+
+cv=CountVectorizer()
+
+x=cv.fit_transform(x)
+v=x.toarray()
+
+print(v)
+
+
+# In[12]:
+
+
+first_col=df.pop('message')
+df.insert(0,'message',first_col)
+df
+
+
+# In[13]:
+
+
+train_x=x[:4180]
+train_y=y[:4180]
+
+test_x=x[4180:]
+test_y=y[4180:]
+
+
+# In[14]:
+
+
+bnb=BernoulliNB(binarize=0.0)
+model=bnb.fit(train_x,train_y)
+
+y_pred_train=bnb.predict(train_x)
+y_pred_test=bnb.predict(test_x)
+
+
+# In[15]:
+
+
+#training score
+print(bnb.score(train_x,train_y)*100)
+
+#testing score
+print(bnb.score(test_x,test_y)*100)
+
+
+# In[16]:
+
+
+from sklearn.metrics import classification_report
+print(classification_report(train_y,y_pred_train))
+
+
+# In[17]:
+
+
+
+from sklearn.metrics import classification_report
+print(classification_report(test_y,y_pred_test))
+
+
+# In[ ]:
+
+
+
+
